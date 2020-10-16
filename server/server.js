@@ -20,6 +20,18 @@ io.on('connection', (socket) => {
     console.log("Client disconnected");
   });
 
+  socket.emit('newMessage', {
+    from: "admin",
+    text: "Welcome to the group chat!",
+    createdAt: new Date(),
+  });
+
+  socket.broadcast.emit('newMessage', {
+    from: "admin",
+    text: "New user joined",
+    createdAt: new Date(),
+  });
+
   socket.on('createMessage', (message) => {
     console.log("create message:", message);
     io.emit('newMessage', {
