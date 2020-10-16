@@ -19,6 +19,16 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log("Client disconnected");
   });
+
+  socket.on('createMessage', (message) => {
+    console.log("create message:", message);
+  });
+
+  socket.emit('newMessage', {
+    from: "example@gmail.com",
+    text: "Hello",
+    createdAt: new Date()
+  });
 });
 
 // Middleware
