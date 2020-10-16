@@ -4,6 +4,8 @@ const express = require('express');
 // const hbs = require('hbs');
 const socketIO = require('socket.io');
 
+const {generateMessage} = require('./utils/message.js');
+
 const publicPath = path.join(__dirname, "../public");
 const port = process.env.PORT || 3000;
 
@@ -20,25 +22,13 @@ io.on('connection', (socket) => {
     console.log("Client disconnected");
   });
 
-  socket.emit('newMessage', {
-    from: "admin",
-    text: "Welcome to the group chat!",
-    createdAt: new Date(),
-  });
+  socket.emit('newMessage', generateMessage('admin', 'Welcome to this chat'));
 
-  socket.broadcast.emit('newMessage', {
-    from: "admin",
-    text: "New user joined",
-    createdAt: new Date(),
-  });
+  socket.broadcast.emit('newMessage', generateMessage('admin', 'New User joined'));
 
   socket.on('createMessage', (message) => {
     console.log("create message:", message);
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date(),
-    });
+    io.emit('newMessage', generateMessage(message.from, message.text));
   });
 });
 
