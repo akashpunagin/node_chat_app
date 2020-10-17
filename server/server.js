@@ -4,7 +4,8 @@ const express = require('express');
 // const hbs = require('hbs');
 const socketIO = require('socket.io');
 
-const {generateMessage, generateLocationMessage} = require('./utils/message.js');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
 
 const publicPath = path.join(__dirname, "../public");
 const port = process.env.PORT || 3000;
@@ -22,9 +23,16 @@ io.on('connection', (socket) => {
     console.log("Client disconnected");
   });
 
-  socket.emit('newMessage', generateMessage('admin', 'Welcome to this chat'));
-
-  socket.broadcast.emit('newMessage', generateMessage('admin', 'New User joined'));
+  socket.on('join', (params, callback) => {
+    if(!isRealString(params.name) || !isRealString(params.room)) {
+      callback("Name and Room are required");
+    } else {
+      socket.join(params.room);
+      socket.emit('newMessage', generateMessage('admin', 'Welcome to this Chat App'));
+      socket.broadcast.to(params.room).emit('newMessage', generateMessage('admin', `${params.name} User joined`));
+      callback();
+    }
+  });
 
   socket.on('createMessage', (message, callback) => {
     console.log("create message:", message);
