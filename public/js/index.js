@@ -1,16 +1,30 @@
 var socket = io();
 
+function onRoomDropDownChange() {
+  console.log("room");
+}
+
 socket.on('connect', function () {
   socket.emit('getActiveRooms');
 });
 
+var roomsDropDown = $("#roomsDropDown");
+var roomNameForm = $("#room-name");
+
 socket.on('updateActiveRoomsDropDown', function (activeRooms) {
-  var select = $("<select></select>");
-  select.attr("id", "rooms").attr("name", "rooms");
+  var select = roomsDropDown
   activeRooms.forEach(function (room) {
     var option = $("<option></option>");
     option.attr("value", room);
     select.append(option.text(room));
   });
-  $("#activeRooms").html(select);
+});
+
+roomsDropDown.on('change', function() {
+  var select = $("#roomsDropDown");
+  if (select.val() !== "custom") {
+    roomNameForm.hide();
+  } else {
+    roomNameForm.show();
+  }
 });

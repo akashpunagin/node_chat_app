@@ -16,13 +16,15 @@
           <label for="name">Display name</label>
           <input type="text" name="name" value="" autofocus />
         </div>
-        <div class="form-field">
+        <div class="form-field" id="room-name">
           <label for="room">Room name</label>
           <input type="text" name="room" value="" autofocus />
         </div>
         <div class="form-field">
-          <label for="rooms">Choose a car:</label>
-          <div id="activeRooms"></div>
+          <label for="rooms">Choose a room:</label>
+          <select id="roomsDropDown" name="rooms" onchange="onRoomDropDownChange()">
+            <option value="custom">Enter Custom value</option>
+          </select>
         </div>
         <div class="form-field">
           <button type="submit" name="button">Join</button>
