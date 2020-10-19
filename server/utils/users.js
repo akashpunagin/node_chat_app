@@ -21,6 +21,10 @@ class Users {
     return this.users.find((user) => user.id === id);
   }
 
+  isUserNameAvailable(name) {
+    return ! ( this.users.find((user) => user.name === name) );
+  }
+
   getUserList(room) {
     var users = this.users.filter((user) => user.room === room);
     var namesArray = users.map((user) => user.name);

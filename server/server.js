@@ -21,17 +21,32 @@ var users = new Users();
 io.on('connection', (socket) => {
   console.log("New user connected");
 
+  socket.on('getActiveRooms', () => {
+    var activeRooms = [];
+    Object.keys(io.sockets.adapter.rooms).forEach((room) => {
+      var isRoom = true;
+      Object.keys(io.sockets.adapter.sids).forEach((id) => {
+        isRoom = (id === room)? false: isRoom;
+      });
+      if (isRoom) activeRooms.push(room);
+    });
+    socket.emit('updateActiveRoomsDropDown', activeRooms);
+  });
+
   socket.on('join', (params, callback) => {
     if(!isRealString(params.name) || !isRealString(params.room)) {
       callback("Name and Room are required");
+    } else if (!users.isUserNameAvailable(params.name)) {
+      callback(`Username - ${params.name} is not available, please try with different username`);
     } else {
+      params.room = params.room.toLowerCase();
       socket.join(params.room);
       users.removeUser(socket.id);
       users.addUser(socket.id, params.name, params.room);
 
       io.to(params.room).emit("updateUserList", users.getUserList(params.room));
 
-      socket.emit('newMessage', generateMessage('admin', 'Welcome to this Chat App'));
+      socket.emit('newMessage', generateMessage('admin', 'Welcome to Chat App'));
       socket.broadcast.to(params.room).emit('newMessage', generateMessage('admin', `${params.name} joined this room`));
       callback();
     }
@@ -49,7 +64,7 @@ io.on('connection', (socket) => {
   socket.on('createLocationMessage', (coords) => {
     var user = users.getUser(socket.id);
     if (user) {
-      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));      
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
     }
   });
 
