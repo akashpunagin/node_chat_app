@@ -206,7 +206,8 @@ button:disabled {
   }
 
   .chat__footer {
-    flex-direction: column
+    width: 100vw;
+    flex-direction: column;
   }
 
   .chat__footer form {
