@@ -1,9 +1,5 @@
 var socket = io();
 
-function onRoomDropDownChange() {
-  console.log("room");
-}
-
 socket.on('connect', function () {
   socket.emit('getActiveRooms');
 });
@@ -23,8 +19,8 @@ socket.on('updateActiveRoomsDropDown', function (activeRooms) {
 roomsDropDown.on('change', function() {
   var select = $("#roomsDropDown");
   if (select.val() !== "custom") {
-    roomNameForm.hide();
+    roomNameForm.fadeOut();
   } else {
-    roomNameForm.show();
+    roomNameForm.fadeIn();
   }
 });

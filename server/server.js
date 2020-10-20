@@ -34,7 +34,8 @@ io.on('connection', (socket) => {
   });
 
   socket.on('join', (params, callback) => {
-    if(!isRealString(params.name) || !isRealString(params.room)) {
+    if (params.rooms !== "custom") params.room = params.rooms;
+    if (!isRealString(params.name) || !isRealString(params.room)) {
       callback("Name and Room are required");
     } else if (!users.isUserNameAvailable(params.name)) {
       callback(`Username - ${params.name} is not available, please try with different username`);
@@ -47,6 +48,9 @@ io.on('connection', (socket) => {
       io.to(params.room).emit("updateUserList", users.getUserList(params.room));
 
       socket.emit('newMessage', generateMessage('admin', 'Welcome to Chat App'));
+      if (users.getUserList(params.room).length > 1) {
+        socket.emit('newMessage', generateMessage('admin', `Members of ${params.room} welcomes you`));
+      }
       socket.broadcast.to(params.room).emit('newMessage', generateMessage('admin', `${params.name} joined this room`));
       callback();
     }
