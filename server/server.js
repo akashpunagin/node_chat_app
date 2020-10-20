@@ -49,7 +49,9 @@ io.on('connection', (socket) => {
 
       socket.emit('newMessage', generateMessage('admin', 'Welcome to Chat App'));
       if (users.getUserList(params.room).length > 1) {
-        socket.emit('newMessage', generateMessage('admin', `Members of ${params.room} welcomes you`));
+        socket.emit('newMessage', generateMessage('admin', `Members of "${params.room}" room welcomes you`));
+      } else {
+        socket.emit('newMessage', generateMessage('admin', `Invite members to "${params.room}" room`));
       }
       socket.broadcast.to(params.room).emit('newMessage', generateMessage('admin', `${params.name} joined this room`));
       callback();

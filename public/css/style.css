@@ -169,13 +169,41 @@ button:disabled {
 }
 
 @media (max-width:600px) {
-  * {
+  /* * {
     font-size: 1rem
-  }
+  } */
 
   /* .chat__sidebar {
     display: none
   } */
+
+  .chat__sidebar {
+    width: 30vw;
+    height: 100vh;
+  }
+
+  .chat__sidebar h3 {
+    font-size: 0.5rem,
+    /* color: #e6eaee; */
+    color: red;
+    margin: 10px 20px;
+    text-align: left,center,
+  }
+
+  #users ol {
+    list-style: none;
+  }
+
+  #users ol li {
+    font-size: 0.8rem;
+  }
+
+  .chat__main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 70vw;
+  }
 
   .chat__footer {
     flex-direction: column
